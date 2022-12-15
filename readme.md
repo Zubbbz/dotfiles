@@ -24,5 +24,6 @@ shit i normally install
 * libreoffice
 * gimp
 * kdenlive
+* espanso
 
 other shit too but i cant think of anything else rn
