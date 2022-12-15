@@ -1,0 +1,44 @@
+# espanso match file
+
+# For a complete introduction, visit the official docs at: https://espanso.org/docs/
+
+# You can use this file to define the base matches (aka snippets)
+# that will be available in every application when using espanso.
+
+# Matches are substitution rules: when you type the "trigger" string
+# it gets replaced by the "replace" string.
+# global_vars:
+
+matches:
+  - trigger: ":date"
+    replace: "{{date}}"
+    vars:
+      - name: "date"
+        type: date
+        params:
+          format: "%B %m, %Y"
+
+  - trigger: ":time"
+    replace: "{{time}}"
+    vars:
+      - name: "time"
+        type: date
+        params:
+          format: "%H:%M"
+
+  - trigger: ":smvid"
+    replace: "ffmpeg -i $|$ -s 1280x720 -r 24 -b:a 96k -b:v 4M -codec:a aac -codec:v libx264 output.mp4"
+
+  - trigger: ":lgvid"
+    replace: "ffmpeg -i $|$ -s 1920x1080 -r 60 -b:a 128k -b:v 8M -codec:a aac -codec:v libx264 output.mp4"
+
+  - trigger: ":tomp4"
+    replace: "ffmpeg -i $|$ -codec:v libx264 -codec:a aac -b:a 128k output.mp4"
+
+  - trigger: ":topng"
+    replace: "ffmpeg -i $|$ output.png"
+
+  - trigger: ":type"
+    form: "[[text]]"
+
+  # And much more! For more information, visit the docs: https://espanso.org/docs/

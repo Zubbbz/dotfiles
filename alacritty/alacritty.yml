@@ -1,0 +1,72 @@
+window:
+  startup_mode: Windowed
+  title: Alacritty
+  dynamic_title: true
+
+font:
+  size: 12
+  normal:
+    family: SauceCodePro Nerd Font Mono
+    style: Semibold
+  bold:
+    style: Bold
+  italic:
+    style: Italic
+  bold_italic:
+    style: Bold Italic
+
+cursor:
+  style:
+    shape: Block
+    blinking: Always
+
+shell:
+  program: /bin/zsh
+  args:
+    - --login
+
+colors:
+  primary:
+    background: '#22272e'
+    foreground: '#99a5b1'
+
+  cursor:
+      text: '#22272e'
+      cursor: '#adbac7'
+
+  selection:
+      text: '#22272e'
+      background: '#539bf5'
+
+  normal:
+      black: '#4a515a'
+      red: '#e5534b'
+      green: '#57ab5a'
+      yellow: '#c69026'
+      blue: '#539bf5'
+      magenta: '#b083f0'
+      cyan: '#76e3ea'
+      white: '#99a5b1'
+
+  bright:
+      black: '#5e6670'
+      red: '#DA6864'
+      green: '#68AE70'
+      yellow: '#C19846'
+      blue: '#65A1EC'
+      magenta: '#AF8EE8'
+      cyan: '#81DBE3'
+      white: '#adbac7'
+
+  dim:
+      black: '#363c44'
+      red: '#BE4A45'
+      green: '#4C9151'
+      yellow: '#A57B28'
+      blue: '#4984CD'
+      magenta: '#9471C9'
+      cyan: '#65BDC4'
+      white: '#85909b'
+
+selection:
+  save_to_clipboard: true

@@ -1,0 +1,16 @@
+matches:
+  - trigger: ":ddate"
+    replace: "{{timestamp}}"
+    vars:
+      - name: timestamp
+        type: date
+        params:
+          format: "<t:%s:D>"
+
+  - trigger: ":dtime"
+    replace: "{{timestamp}}"
+    vars:
+      - name: timestamp
+        type: date
+        params:
+          format: "<t:%s:t>"

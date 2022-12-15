@@ -1,0 +1,6 @@
+filter_exec: Discord
+extra_excludes:
+  - "../match/sensitive.yml"
+
+extra_includes:
+  - "../match/appSpecific/_discord.yml"
