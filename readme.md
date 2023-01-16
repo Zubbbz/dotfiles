@@ -1,6 +1,7 @@
 # my dotfiles
 probably don't use these or do, i dont really care, its just shit i normally install
 
+## shit i use
 * [Rust](https://rustup.rs/)
 * [Starship](https://starship.rs/guide/#%F0%9F%9A%80-installation)
 * Tmux
@@ -22,3 +23,12 @@ probably don't use these or do, i dont really care, its just shit i normally ins
 * [Audient Evo 4 Driver](https://evo.audio/products/audio-interfaces/evo-4/downloads/)
 * [AutoHotkey](https://www.autohotkey.com/)
 * [Signal](https://www.signal.org/download/)
+* [Lua](https://luabinaries.sourceforge.net/)
+* [GluaFixer](https://github.com/FPtje/GLuaFixer/releases)
+* [libgmod](https://github.com/Lexicality/libgmod)
+* [7-Zip](https://www.7-zip.org/)
+* [Everything](https://www.voidtools.com/downloads/)
+* [NodeJS](https://nodejs.org/en/)
+* [qBitTorrent](https://www.qbittorrent.org/download.php)
+* [Yubico](https://www.yubico.com/support/download/)
+* [Steam](https://store.steampowered.com/)
