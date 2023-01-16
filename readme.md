@@ -21,3 +21,4 @@ probably don't use these or do, i dont really care, its just shit i normally ins
 * [espanso](https://espanso.org/)
 * [Audient Evo 4 Driver](https://evo.audio/products/audio-interfaces/evo-4/downloads/)
 * [AutoHotkey](https://www.autohotkey.com/)
+* [Signal](https://www.signal.org/download/)
