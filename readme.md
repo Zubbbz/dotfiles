@@ -10,7 +10,7 @@ probably don't use these or do, i dont really care, its just shit i normally ins
 * [mpv](https://mpv.io/)
 * [obs](https://obsproject.com/)
 * [vscode](https://code.visualstudio.com/)
-* [bitwarden](https://bitwarden.com/download/)
+* [1Password](https://1password.com/downloads/windows/)
 * [firefox](https://www.mozilla.org/en-US/firefox/new/)
 * [rustdesk](https://rustdesk.com/)
 * [ffmpeg](https://ffmpeg.org/)
