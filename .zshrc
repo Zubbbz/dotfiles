@@ -3,15 +3,6 @@ export WINIT_X11_SCALE_FACTOR=1
 
 eval "$(starship init zsh)"
 
-# ssh shit
-if [ ! -S ~/.ssh/ssh_auth_sock ]; then
-  eval `ssh-agent`
-  ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
-  ssh-add /home/nathan/.ssh/zubbbztas
-fi
-export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
-ssh-add -l > /dev/null || ssh-add
-
 # tmux ftw (I don't want tmux in the vscode terminal tho)
 CURRENT_TERMINAL=$(ps -p $PPID -o comm=)
 # echo $CURRENT_TERMINAL
