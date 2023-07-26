@@ -1,19 +1,42 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-#fart
-{ config, pkgs, ... }:
-
 {
+  config,
+  pkgs,
+  ...
+}: {
   # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+    };
+  };
+
+  nix = {
+    settings = {
+      warn-dirty = false;
+      auto-optimise-store = true;
+    };
+
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 3d";
+    };
+
+    extraOptions = ''
+      min-free = ${toString (100* 1024 * 1024)}
+      max-free = ${toString (1024 * 1024 * 1024)}
+    '';
+  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    ### Tools ###
+        ### Tools ###
     # Browsers
-      firefox
+      librewolf
       ungoogled-chromium
     # YubiKey Stuff
       yubikey-manager-qt yubioath-flutter
@@ -22,43 +45,31 @@
     # Editors
       vscode-fhs
       neovim
-    # Cli Tools
-      killall
-      btop
-      neofetch
-      wget
-      ripgrep
-      thefuck
-      git
+      jetbrains.idea-ultimate
+      jetbrains.webstorm
+      jetbrains.pycharm-community
+    # Gui Tools
+      gparted
       nitrogen
-      flameshot
-      starship
-      bat
-      bitwarden-cli
     # Communications
-      discord
       signal-desktop
+      discord
     # RDP
       rustdesk
-    # Files
-      xfce.thunar
-      dolphin
-      pcmanfm
-      p7zip
-      ark
-      unzip
-      libarchive
-    # Mullvad
-      mullvad mullvad-vpn mullvad-browser
     # Tor
       tor-browser-bundle-bin
 
     ### Dev Tools ###
     # Python
-      python311Full python311Packages.pip
+      python38Full
+      python39Full
+      python310Full
+      python311Full
+
     # Node
       nodejs_18
       nodePackages.typescript
+      nodePackages.ts-node
       nodePackages.npm
       nodePackages.pnpm
       yarn
@@ -78,6 +89,11 @@
     # Go
       go
 
+
+    # Minecraft
+      prismlauncher
+    # Steam
+      steamPackages.steam
     ### Audio/Graphsics/Video ###
     # FFmpeg
       ffmpeg ffmpegthumbnailer ffmpegthumbs
@@ -88,17 +104,39 @@
     # Content Players
       mpv
       plex-media-player
+    # Font stuff
+      freetype
+      fontconfig
+    # Cli Tools
+      killall
+      btop
+      neofetch
+      wget
+      ripgrep
+      thefuck
+      git
+      flameshot
+      starship
+      bat
+      bitwarden-cli
+      xorg.xrandr
+    # RDP
+      rustdesk
+    # Files
+      xfce.thunar
+      ark
+      libarchive
     # Audio Control
       pavucontrol
       qjackctl
       helvum
       bluez
+    # Video
+      xorg_sys_opengl
+      xorg.xf86videointel
 
-    ### Gaming ##
-    # Minecraft
-      prismlauncher
-    # Steam
-      steam
+    # Mullvad
+      mullvad mullvad-vpn mullvad-browser
 
     # Virtualization
       qemu
@@ -114,14 +152,30 @@
       polkit_gnome
       i3
       bitwarden
+      arandr
+      xdg-desktop-portal-gtk
   ];
 
   programs = {
     dconf = {
       enable = true;
     };
+
     zsh = {
       enable = true;
+    };
+
+    gnupg = {
+      agent = {
+        enable = true;
+        enableSSHSupport = true;
+      };
+    };
+
+    steam = {
+      enable = true;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
     };
   };
 
@@ -135,14 +189,6 @@
       }
     '';
   };
-
-  fonts.fonts = with pkgs; [
-    nerdfonts
-    noto-fonts
-    noto-fonts-cjk
-    noto-fonts-emoji
-    font-awesome
-  ];
 
   virtualisation.libvirtd.enable = true;
 
@@ -200,6 +246,12 @@
       };
     };
 
+    gnome = {
+      gnome-keyring = {
+        enable = true;
+      };
+    };
+
     # Mullvad                                                 ##### Mullvad ####
     mullvad-vpn = {
       enable = true;
@@ -209,7 +261,28 @@
     printing = {
       enable = true;
     };
+
+    udev = {
+      packages = [ pkgs.yubikey-personalization ];
+    };
+
+    pcscd = {
+      enable = true;
+    };
+
+    dbus = {
+      enable = true;
+    };
+
   };
+
+  xdg = {
+    portal = {
+      enable = true;
+      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    };
+  };
+
                                                           ###### HARDWARE ######
   hardware = {
     bluetooth = {
@@ -236,7 +309,7 @@
     };
     tmp = {
       cleanOnBoot = true;
-      useTmpfs = true;
+      useTmpfs = false;
     };
   };
 
@@ -284,6 +357,11 @@
       LC_TIME = "en_US.UTF-8";
     };
   };
+  console = {
+    packages=[pkgs.terminus_font];
+    font="${pkgs.terminus_font}/share/consolefonts/ter-i22b.psf.gz";
+    useXkbConfig = true;
+  };
                                                           ###### SECURITY ######
   security = {
     sudo = {
@@ -298,41 +376,75 @@
     polkit = {
       extraConfig = ''
         polkit.addRule(function(action, subject) {
-          if (
-            subject.isInGroup("users")
-              && (
-                action.id == "org.freedesktop.login1.reboot" ||
-                action.id == "org.freedesktop.login1.reboot-multiple-sessions" ||
-                action.id == "org.freedesktop.login1.power-off" ||
-                action.id == "org.freedesktop.login1.power-off-multiple-sessions" ||
-              )
+        if (
+          subject.isInGroup("users")
+          && (
+              action.id == "org.freedesktop.login1.reboot" ||
+              action.id == "org.freedesktop.login1.reboot-multiple-sessions" ||
+              action.id == "org.freedesktop.login1.power-off" ||
+              action.id == "org.freedesktop.login1.power-off-multiple-sessions" ||
             )
-          {
-            return polkit.Result.YES;
-          }
-        })
+          )
+        {
+          return polkit.Result.YES;
+        }
+      })
       '';
       enable = true;
+    };
+    pam = {
+      services = {
+        login = {
+          u2fAuth = true;
+        };
+
+        sudo = {
+          u2fAuth = true;
+        };
+      };
     };
   };
 
                                                           ###### SYSTEMD #######
   systemd = {
     # Authentication agent
-    user.services.polkit-gnome-authentication-agent-1 = {
-      description = "polkit-gnome-authentication-agent-1";
-      wantedBy = [ "graphical-session.target" ];
-      wants = [ "graphical-session.target" ];
-      after = [ "graphical-session.target" ];
-      serviceConfig = {
-        Type = "simple";
-        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-        Restart = "on-failure";
-        RestartSec = 1;
-        TimeoutStopSec = 10;
+    user = {
+      services = {
+        polkit-gnome-authentication-agent-1 = {
+          description = "polkit-gnome-authentication-agent-1";
+          wantedBy = [ "graphical-session.target" ];
+          wants = [ "graphical-session.target" ];
+          after = [ "graphical-session.target" ];
+          serviceConfig = {
+            Type = "simple";
+            ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+            Restart = "on-failure";
+            RestartSec = 1;
+            TimeoutStopSec = 10;
+          };
+        };
       };
+    };
   };
-};
+
+  fonts = {
+    fonts = with pkgs; [
+      noto-fonts
+      noto-fonts-cjk
+      noto-fonts-emoji
+      font-awesome
+      (nerdfonts.override {fonts = ["SourceCodePro"]; })
+    ];
+    fontconfig = {
+      enable = true;
+      defaultFonts = {
+        # monospace = [ "Sauce Code Pro " ];
+        serif = [ "Noto Serif" "Source Han Serif" ];
+        sansSerif = [ "Noto Sans" "Source Han Sans" ];
+      };
+    };
+  };
+
                                                           ###### USERS #########
   users = {
     defaultUserShell = pkgs.zsh;
@@ -340,7 +452,7 @@
       nathan = {
         isNormalUser = true;
         description = "nathan";
-        extraGroups = [ "networkmanager" "wheel" "libvirtd" "audio" ];
+        extraGroups = [ "users" "networkmanager" "wheel" "libvirtd" "audio" ];
       };
     };
   };
@@ -351,6 +463,10 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "23.05"; # Did you read the comment?
-  system.autoUpgrade.enable = true;
+  system = {
+    stateVersion = "23.05"; # Did you read the comment?
+    autoUpgrade = {
+      enable = true;
+    };
+  };
 }
